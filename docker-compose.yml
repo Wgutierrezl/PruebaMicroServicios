@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+  apisolicitudes:
+    build:
+      context: .
+      dockerfile: Solicitudes/ApiSolicitudes/Dockerfile
+    image: apisolicitudes
+    depends_on:
+      - sqlserver
+    ports:
+      - "${API_SOLICITUDES_PORT}:${CONTAINER_PORT}"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+
+  apiusuarios:
+    build:
+      context: .
+      dockerfile: Usuarios/ApiUsuarios/Dockerfile
+    image: apiusuarios
+    depends_on:
+      - sqlserver
+    ports:
+      - "${API_USUARIOS_PORT}:${CONTAINER_PORT}"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+  
+  sqlserver:
+    build:
+      context: ./sql
+      dockerfile: Dockerfile
+    image: dockersql
+    container_name: sqlserver
+    restart: always
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./sql/data:/var/opt/mssql/data
+      - ./sql/backups:/var/opt/mssql/backups
+
