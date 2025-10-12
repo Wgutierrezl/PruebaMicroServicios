@@ -33,6 +33,15 @@ services:
       - Jwt__Issuer=${JWT_ISSUER}
       - Jwt__Audience=${JWT_AUDIENCE}
   
+  apicomentarios:
+    build:
+      context: ./Comentarios/demo
+      dockerfile: Dockerfile
+    image: apicomentarios
+    ports:
+      - "${API_COMENTARIOS_PORT}:${CONTAINER_PORT}"
+    
+
   #sqlserver:
   #  build:
   #    context: ./sql

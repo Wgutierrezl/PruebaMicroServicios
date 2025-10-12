@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: MicroComentarios
+  datasource:
+    url: jdbc:sqlserver://host.docker.internal\\SQLEXPRESS:1433;databaseName=MicroPortal;encrypt=true;trustServerCertificate=true
+    username: usr_waltg
+    password: waltergutierrez
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        globally_quoted_identifiers: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+server:
+  port: 8080
+
+api:
+  usuarios:
+    base-url: "http://apiusuarios:8080/"
+
+
