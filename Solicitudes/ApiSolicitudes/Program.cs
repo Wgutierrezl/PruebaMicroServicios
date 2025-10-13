@@ -94,7 +94,7 @@ builder.Services.AddHttpClient("UsuariosApi", client =>
     client.BaseAddress = new Uri("http://apiusuarios:8080/"); // API Usuarios
 });
 
-// Configuración de CORS
+// Configuraciï¿½n de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -110,7 +110,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
