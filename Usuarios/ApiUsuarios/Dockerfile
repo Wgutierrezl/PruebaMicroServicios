@@ -12,10 +12,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Usuarios/ApiUsuarios/ApiUsuarios.csproj", "Usuarios/ApiUsuarios/"]
-RUN dotnet restore "./Usuarios/ApiUsuarios/ApiUsuarios.csproj"
+COPY ["ApiUsuarios.csproj", ""]
+RUN dotnet restore "./ApiUsuarios.csproj"
 COPY . .
-WORKDIR "/src/Usuarios/ApiUsuarios"
+
+#Compila el proyecto
 RUN dotnet build "./ApiUsuarios.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Esta fase se usa para publicar el proyecto de servicio que se copiará en la fase final.

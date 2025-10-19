@@ -107,12 +107,27 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
-    app.UseSwagger();
+    app.UseSwagger(c =>
+    {
+        c.RouteTemplate = "apiusuarios/swagger/{documentName}/swagger.json";
+        c.PreSerializeFilters.Add((swagger, httpReq) =>
+        {
+            // Esto hace que Swagger genere las URLs con el base path correcto
+            swagger.Servers = new List<OpenApiServer> 
+            { 
+                new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}/apiusuarios" }
+            };
+        });
+    });
+
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MicroServicio Usuarios Api v1");
+        c.SwaggerEndpoint("/apiusuarios/swagger/v1/swagger.json", "MicroServicio Usuarios Api v1");
+        c.RoutePrefix = "apiusuarios/swagger";
     });
 }
+
+app.Urls.Add("http://0.0.0.0:8080");
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");

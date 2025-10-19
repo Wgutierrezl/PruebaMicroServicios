@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apiusuarios-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apiusuarios
+  template:
+    metadata:
+      labels:
+        app: apiusuarios
+    spec:
+      containers:
+      - name: apiusuarios
+        image: apiusuarios:latest 
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+        #- name: ASPNETCORE_URLS
+        #  value: "http://+:8080"
+        - name: Jwt__Key
+          value: "HH24qJLS/mRBsykjM9LG6e4qEOLoVOBkwbaQzRdZcM3XX3lK62mTYqGseMmrr16/24wUdOHEg+SxxNahr/RNaQ=="
+        - name: Jwt__Issuer
+          value: "MiFixTime"
+        - name: Jwt__Audience
+          value: "MyAudience"
+        
