@@ -21,8 +21,10 @@ spec:
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: "Development"
-        #- name: ASPNETCORE_URLS
-        #  value: "http://+:8080"
+        - name: ASPNETCORE_URLS
+          value: "http://+:8080"
+        - name: SWAGGER_PREFIX
+          value: "/apiusuarios"  
         - name: Jwt__Key
           value: "HH24qJLS/mRBsykjM9LG6e4qEOLoVOBkwbaQzRdZcM3XX3lK62mTYqGseMmrr16/24wUdOHEg+SxxNahr/RNaQ=="
         - name: Jwt__Issuer

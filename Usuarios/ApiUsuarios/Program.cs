@@ -105,25 +105,40 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+// ✅ Detecta si tiene prefijo de ruta (para Ingress)
+var swaggerPrefix = Environment.GetEnvironmentVariable("SWAGGER_PREFIX");
+if (!string.IsNullOrEmpty(swaggerPrefix))
+{
+    app.UsePathBase(swaggerPrefix);
+}
+
+// Swagger
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger(c =>
     {
-        c.RouteTemplate = "apiusuarios/swagger/{documentName}/swagger.json";
+        c.RouteTemplate = "swagger/{documentName}/swagger.json";
         c.PreSerializeFilters.Add((swagger, httpReq) =>
         {
-            // Esto hace que Swagger genere las URLs con el base path correcto
-            swagger.Servers = new List<OpenApiServer> 
-            { 
-                new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}/apiusuarios" }
+            var basePath = httpReq.Headers.ContainsKey("X-Forwarded-Prefix")
+                ? httpReq.Headers["X-Forwarded-Prefix"].FirstOrDefault()
+                : string.Empty;
+
+            swagger.Servers = new List<OpenApiServer>
+            {
+                new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}{basePath}" }
             };
         });
     });
 
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/apiusuarios/swagger/v1/swagger.json", "MicroServicio Usuarios Api v1");
-        c.RoutePrefix = "apiusuarios/swagger";
+        var endpoint = string.IsNullOrEmpty(swaggerPrefix)
+            ? "/swagger/v1/swagger.json"
+            : $"{swaggerPrefix}/swagger/v1/swagger.json";
+
+        c.SwaggerEndpoint(endpoint, "MicroServicio Usuarios Api v1");
+        c.RoutePrefix = "swagger";
     });
 }
 
